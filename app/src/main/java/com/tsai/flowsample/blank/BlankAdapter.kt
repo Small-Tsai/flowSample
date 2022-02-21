@@ -42,4 +42,8 @@ class BlankAdapter : ListAdapter<String, BlankAdapter.BlankViewHolder>(DiffCallB
     override fun getItemCount(): Int {
         return super.getItemCount()
     }
+
+    override fun getItem(position: Int): String {
+        return super.getItem(position)
+    }
 }

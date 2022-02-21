@@ -36,13 +36,12 @@ class BlankFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
-        val adapter = BlankAdapter()
-        val adapter2 = TestAdapter()
+
+        val adapter = TestAdapter()
 
         collectLatestLifeCycleFlowStarted(viewModel.largeList) {
-//            adapter.submitList(it)
             binding.apply {
-                adapter2.submitList(
+                adapter.submitList(
                     it,
                     ((rev.layoutManager) as LinearLayoutManager).findFirstVisibleItemPosition(),
                     ((rev.layoutManager) as LinearLayoutManager).findLastVisibleItemPosition()
@@ -50,7 +49,7 @@ class BlankFragment : Fragment() {
             }
         }
 
-        binding.rev.adapter = adapter2
+        binding.rev.adapter = adapter
 
     }
 

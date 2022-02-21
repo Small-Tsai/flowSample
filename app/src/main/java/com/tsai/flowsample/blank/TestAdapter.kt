@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.ListUpdateCallback
 import androidx.recyclerview.widget.RecyclerView
 import com.tsai.flowsample.databinding.ItemStringBinding
 
-class TestAdapter : PartialDiffAdapter<String, TestAdapter.BlankViewHolder>() {
+class TestAdapter : PartialDiffAdapter<String, TestAdapter.BlankViewHolder>(10) {
 
     class BlankViewHolder(private val binding: ItemStringBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -29,7 +29,7 @@ class TestAdapter : PartialDiffAdapter<String, TestAdapter.BlankViewHolder>() {
 
     override fun setupDiffResult(
         oldSubList: List<String>,
-        newSubList: List<String>
+        newSubList: List<String>,
     ): DiffUtil.DiffResult = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
         override fun getOldListSize(): Int {
             return oldSubList.size
@@ -47,7 +47,4 @@ class TestAdapter : PartialDiffAdapter<String, TestAdapter.BlankViewHolder>() {
             return oldSubList[oldItemPosition] == newSubList[newItemPosition]
         }
     })
-
-
-
 }
