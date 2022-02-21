@@ -2,6 +2,7 @@ package com.tsai.flowsample.factory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.tsai.flowsample.blank.BlankFragmentViewModel
 import com.tsai.flowsample.data.source.Repo
 import com.tsai.flowsample.ui.main.MainViewModel
 import java.lang.IllegalArgumentException
@@ -14,6 +15,7 @@ class ViewModelFactory(
         with(modelClass) {
             when {
                 isAssignableFrom(MainViewModel::class.java) -> MainViewModel(repo)
+                isAssignableFrom(BlankFragmentViewModel::class.java) -> BlankFragmentViewModel(repo)
                 else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
             }
         } as T

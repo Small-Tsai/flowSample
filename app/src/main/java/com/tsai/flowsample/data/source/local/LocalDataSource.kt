@@ -1,16 +1,12 @@
 package com.tsai.flowsample.data.source.local
 
-import com.tsai.flowsample.data.Result
 import com.tsai.flowsample.data.source.DataSource
-import com.tsai.flowsample.ext.toast
 import com.tsai.flowsample.util.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.withContext
 
 object LocalDataSource : DataSource {
 
@@ -26,6 +22,15 @@ object LocalDataSource : DataSource {
         delay(5000)
         val newTitle = "This new title is get from local data source"
         emit(newTitle)
+    }.flowOn(Dispatchers.IO)
+
+    override fun getLargeList(): Flow<List<String>> = flow {
+        val list = mutableListOf<String>()
+        for (i in 0..300000) {
+            list.add(i.toString())
+        }
+        emit(list)
+        Logger.d("$list")
     }.flowOn(Dispatchers.IO)
 
 }

@@ -12,7 +12,7 @@
         tools:layout="@layout/main_fragment" />
     <fragment
         android:id="@+id/blankFragment"
-        android:name="com.tsai.flowsample.BlankFragment"
+        android:name="com.tsai.flowsample.blank.BlankFragment"
         android:label="fragment_blank"
         tools:layout="@layout/fragment_blank" />
 

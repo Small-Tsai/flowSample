@@ -21,13 +21,17 @@ fun Fragment.getVmFactory(): ViewModelFactory {
 }
 
 fun <T> Fragment.collectLifeCycleFlowStarted(flow: Flow<T>, collect: suspend (T) -> Unit) {
-    viewLifecycleOwner.lifecycleScope.launch {
-        flow.collect(collect)
+    lifecycleScope.launch {
+        repeatOnLifecycle(Lifecycle.State.STARTED) {
+            flow.collect(collect)
+        }
     }
 }
 
 fun <T> Fragment.collectLatestLifeCycleFlowStarted(flow: Flow<T>, collect: suspend (T) -> Unit) {
-    viewLifecycleOwner.lifecycleScope.launch {
-        flow.collectLatest(collect)
+    lifecycleScope.launch {
+        repeatOnLifecycle(Lifecycle.State.STARTED) {
+            flow.collectLatest(collect)
+        }
     }
 }

@@ -13,4 +13,6 @@ interface Repo {
 
     suspend fun changeTitleString(): Flow<String>
 
+    suspend fun getLargeList(): Flow<List<String>>
+
 }

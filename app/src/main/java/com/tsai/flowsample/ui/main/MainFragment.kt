@@ -7,9 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.tsai.flowsample.NavigationDirections
 import com.tsai.flowsample.databinding.MainFragmentBinding
@@ -17,10 +14,6 @@ import com.tsai.flowsample.ext.collectLatestLifeCycleFlowStarted
 import com.tsai.flowsample.ext.collectLifeCycleFlowStarted
 import com.tsai.flowsample.ext.getVmFactory
 import com.tsai.flowsample.util.Logger
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 class MainFragment : Fragment() {
 
@@ -54,9 +47,11 @@ class MainFragment : Fragment() {
             findNavController().navigate(NavigationDirections.navToBlank())
         }
 
-        collectLatestLifeCycleFlowStarted(viewModel.titleString){
+        collectLatestLifeCycleFlowStarted(viewModel.titleString) {
             binding.message.text = it
         }
+
+
 
         return binding.root
     }

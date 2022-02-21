@@ -15,4 +15,8 @@ class DefaultRepo(
         return dataSource.changeTitleString()
     }
 
+    override suspend fun getLargeList(): Flow<List<String>> {
+        return dataSource.getLargeList()
+    }
+
 }

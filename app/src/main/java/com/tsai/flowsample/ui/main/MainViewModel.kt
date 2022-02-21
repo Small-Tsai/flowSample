@@ -1,6 +1,5 @@
 package com.tsai.flowsample.ui.main
 
-import androidx.lifecycle.Transformations.map
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tsai.flowsample.data.source.Repo
@@ -37,6 +36,7 @@ class MainViewModel(private val repo: Repo) : ViewModel() {
             _navToBlankFrag.emit(true)
         }
     }
+
 
     @FlowPreview
     fun getTilteThenChangeTitle() {

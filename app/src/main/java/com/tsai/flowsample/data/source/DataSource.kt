@@ -9,4 +9,6 @@ interface DataSource {
 
     fun changeTitleString(): Flow<String>
 
+    fun getLargeList(): Flow<List<String>>
+
 }
