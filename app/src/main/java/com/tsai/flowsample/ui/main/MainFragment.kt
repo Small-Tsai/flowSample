@@ -2,18 +2,23 @@ package com.tsai.flowsample.ui.main
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.tsai.flowsample.NavigationDirections
+import com.tsai.flowsample.customview.ProgressButton
 import com.tsai.flowsample.databinding.MainFragmentBinding
 import com.tsai.flowsample.ext.collectLatestLifeCycleFlowStarted
 import com.tsai.flowsample.ext.collectLifeCycleFlowStarted
 import com.tsai.flowsample.ext.getVmFactory
 import com.tsai.flowsample.util.Logger
+import kotlinx.coroutines.flow.collect
 
 class MainFragment : Fragment() {
 
@@ -25,7 +30,7 @@ class MainFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        Logger.d("Fragment onAttach")
+        Logger.d("Fragment onAttach ${requireActivity().hashCode()}")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +48,14 @@ class MainFragment : Fragment() {
         binding.mainViewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
+        // progress button demo ( progress on center of button )
+        binding.progressButton2.apply {
+            progressStyle = ProgressButton.ProgressStyle.Right
+            setOnClickListener {
+                viewModel.startDemoProgressButton()
+            }
+        }
+
         collectLifeCycleFlowStarted(viewModel.navToBlankFrag) {
             findNavController().navigate(NavigationDirections.navToBlank())
         }
@@ -51,7 +64,16 @@ class MainFragment : Fragment() {
             binding.message.text = it
         }
 
+        viewModel.isButtonLoading.asLiveData().observe(viewLifecycleOwner) {
+            binding.progressButton2.isLoading = it
+        }
 
+        lifecycleScope.launchWhenStarted {
+            viewModel.setTextEvent.collect {
+                Log.d("small tsai", "setTextEvent: receive!!!!!")
+                binding.progressButton2.text = "已經在 loading 時被改過"
+            }
+        }
 
         return binding.root
     }

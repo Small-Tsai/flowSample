@@ -1,12 +1,16 @@
 package com.tsai.flowsample
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.view.LayoutInflater
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.tsai.flowsample.data.Name
 import com.tsai.flowsample.databinding.MainActivityBinding
-import com.tsai.flowsample.ui.main.MainFragment
 import com.tsai.flowsample.util.Logger
+import com.tsai.flowsample.util.json
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import kotlinx.serialization.descriptors.elementNames
 
 class MainActivity : AppCompatActivity() {
 
@@ -14,8 +18,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Logger.d("activity onCreate")
-
+        Logger.d("activity onCreate ${this.hashCode()}")
         binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
     }
@@ -23,6 +26,14 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         Logger.d("activity onStart")
+        lifecycleScope.launchWhenStarted {
+            withContext(Dispatchers.IO){
+                Log.v("small tsai", "onStart: ${Thread.currentThread()}")
+            }
+        }
+        json.decodeFromString(Name.serializer(), "kevin.").also {
+            Log.i("small tsai", "onCreate: $it")
+        }
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {

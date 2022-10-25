@@ -9,9 +9,10 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tsai.flowsample.databinding.FragmentBlankBinding
 import com.tsai.flowsample.ext.collectLatestLifeCycleFlowStarted
-import com.tsai.flowsample.ext.collectLifeCycleFlowStarted
 import com.tsai.flowsample.ext.getVmFactory
-import com.tsai.flowsample.util.Logger
+import com.tsai.flowsample.viewpager.PageType
+import dcard.commons.component.identity.bottomsheet.viewpager2.BottomSheetSmoothViewHeightAnimator
+import dcard.commons.component.identity.bottomsheet.viewpager2.IdentityBottomSheetViewPager2Adapter
 
 
 class BlankFragment : Fragment() {
@@ -27,18 +28,15 @@ class BlankFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         binding = FragmentBlankBinding.inflate(layoutInflater, container, false)
+        setupViewPager()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
-
-
         val adapter = TestAdapter()
-
         collectLatestLifeCycleFlowStarted(viewModel.largeList) {
             binding.apply {
                 adapter.submitList(
@@ -48,10 +46,21 @@ class BlankFragment : Fragment() {
                 )
             }
         }
-
         binding.rev.adapter = adapter
-
     }
 
-
+    private fun setupViewPager() {
+        binding.viewPager2.apply {
+            adapter = IdentityBottomSheetViewPager2Adapter(
+                fragment = this@BlankFragment,
+                items = PageType.values().toList()
+            )
+            registerOnPageChangeCallback(
+                BottomSheetSmoothViewHeightAnimator(viewPager2 = this).apply {
+                    mode = BottomSheetSmoothViewHeightAnimator.Mode.FixedFirstPageHeightIfIsHighest
+                }
+            )
+            isUserInputEnabled = true
+        }
+    }
 }
