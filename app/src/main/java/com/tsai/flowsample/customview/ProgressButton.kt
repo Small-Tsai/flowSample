@@ -16,6 +16,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.google.android.material.button.MaterialButton
+import kotlin.math.roundToInt
 
 /**
  * This custom button can has loading state to provide progress bar on the button
@@ -102,9 +103,7 @@ class ProgressButton @JvmOverloads constructor(
                 ProgressStyle.Center -> {
                     (textWidthCache
                         ?.div(2)
-                        ?.minus(paddingRight)
-                        ?.minus(paddingLeft)
-                        ?.plus(2.5f) // progress bar stroke width
+                        ?.minus(drawable.bounds.width())
                         ?.plus(progressBarMarginStart)
                             ) ?: 0f
                 }
@@ -114,7 +113,7 @@ class ProgressButton @JvmOverloads constructor(
             }
 
             // adjust canvas horizontally to draw drawable with defined margin from text
-            canvas.translate(transX, transY.toFloat())
+            canvas.translate(transX.toFloat(), transY.toFloat())
             drawable.draw(canvas)
             canvas.restore()
         }
@@ -137,8 +136,8 @@ class ProgressButton @JvmOverloads constructor(
 
     private val progressBarMarginStart: Int
         get() = when (progressStyle) {
-            ProgressStyle.Center -> 0
-            ProgressStyle.Right -> 20
+            ProgressStyle.Center -> 0.dpToPixelSize(context)
+            ProgressStyle.Right -> 4.dpToPixelSize(context)
         }
 
     private var textCache = text
@@ -190,6 +189,7 @@ class ProgressButton @JvmOverloads constructor(
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        textWidthCache = measuredWidth
         when (progressStyle) {
             ProgressStyle.Center -> {
                 textWidthCache?.let {
@@ -203,7 +203,6 @@ class ProgressButton @JvmOverloads constructor(
             }
             ProgressStyle.Right -> {}
         }
-        textWidthCache = measuredWidth
     }
 
     override fun onSaveInstanceState(): Parcelable {
@@ -257,3 +256,6 @@ class ProgressButton @JvmOverloads constructor(
         super.setText(textCache)
     }
 }
+
+fun Int.dpToPixel(context: Context) = this * context.resources.displayMetrics.density
+fun Int.dpToPixelSize(context: Context) = dpToPixel(context).roundToInt()
